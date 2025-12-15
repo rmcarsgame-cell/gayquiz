@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massive Food Preference Quiz</title>
+    <title>Massive Food Preference Speedrun Quiz</title>
     <style>
         :root {
             --primary: #ff6b6b;
             --secondary: #4ecdc4;
-            --color-c: #ffae42; /* Orange */
-            --color-d: #4c4c9d; /* Indigo */
-            --color-e: #00b894; /* Green */
-            --color-f: #a29bfe; /* Lavender */
+            --color-c: #ffae42; 
+            --color-d: #4c4c9d; 
+            --color-e: #00b894; 
+            --color-f: #a29bfe; 
             --bg: #f7f9fc;
             --text: #2d3436;
         }
@@ -32,10 +32,11 @@
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             width: 90%;
-            max-width: 650px; /* Wider to fit 3 columns */
+            max-width: 650px;
             text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -54,8 +55,26 @@
             cursor: default;
         }
 
+        /* --- Timer Styles --- */
+        #timer-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-d);
+            margin-bottom: 1rem;
+            background: #eef;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border-bottom: 3px solid var(--color-d);
+            display: inline-block;
+        }
+
+        #pb-display {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
         .options {
-            /* Changed to 3 columns to fit 6 options nicely */
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 1rem;
@@ -65,19 +84,18 @@
             padding: 15px 10px;
             border: none;
             border-radius: 8px;
-            font-size: 0.95rem; /* Slightly smaller font to fit options */
+            font-size: 0.95rem;
             cursor: pointer;
             transition: transform 0.1s, opacity 0.2s;
             font-weight: bold;
             color: white;
-            white-space: nowrap; /* Prevents text wrapping too aggressively */
+            white-space: nowrap;
         }
 
         button:active {
             transform: scale(0.98);
         }
 
-        /* Color definitions for the 6 buttons */
         .btn-a { background-color: var(--primary); }
         .btn-b { background-color: var(--secondary); }
         .btn-c { background-color: var(--color-c); }
@@ -89,7 +107,7 @@
             opacity: 0.9;
         }
 
-        /* Result Styles remain the same */
+        /* Result Styles */
         .hidden { display: none; }
         
         #result-container h2 {
@@ -101,6 +119,27 @@
             font-size: 1.1rem;
             margin-top: 1rem;
             color: #636e72;
+        }
+        
+        #time-result {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--color-e);
+            margin: 1rem 0;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 0.5rem;
+        }
+
+        .pb-beaten {
+            color: var(--primary);
+            font-weight: 900;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .progress-bar {
@@ -118,25 +157,55 @@
             width: 0%;
             transition: width 0.3s ease;
         }
+
+        /* --- Confetti Styles (Simple CSS Effect) --- */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            opacity: 0;
+            animation: fall 3s ease-in-out forwards;
+        }
+
+        @keyframes fall {
+            0% { opacity: 1; transform: translateY(-100px) rotateZ(0deg); }
+            100% { opacity: 0; transform: translateY(100vh) rotateZ(720deg); }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div id="confetti-effect" class="confetti-container hidden"></div>
+
         <div id="quiz-box">
+            <div id="pb-display">Personal Best: Loading...</div>
+            <div id="timer-display">00:00.00</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
             </div>
-            <h1>Food Personality Quiz</h1>
+            <h1>Food Personality Quiz (120 Questions)</h1>
             <div class="question-box">
                 <p class="question-text" id="question" onclick="checkSecret()">Loading...</p>
                 <div class="options">
-                    <button class="btn-a" id="opt-a" onclick="nextQuestion()">Option A</button>
-                    <button class="btn-b" id="opt-b" onclick="nextQuestion()">Option B</button>
-                    <button class="btn-c" id="opt-c" onclick="nextQuestion()">Option C</button>
-                    <button class="btn-d" id="opt-d" onclick="nextQuestion()">Option D</button>
-                    <button class="btn-e" id="opt-e" onclick="nextQuestion()">Option E</button>
-                    <button class="btn-f" id="opt-f" onclick="nextQuestion()">Option F</button>
+                    <button class="btn-a" id="opt-a" onclick="handleAnswer()">Option A</button>
+                    <button class="btn-b" id="opt-b" onclick="handleAnswer()">Option B</button>
+                    <button class="btn-c" id="opt-c" onclick="handleAnswer()">Option C</button>
+                    <button class="btn-d" id="opt-d" onclick="handleAnswer()">Option D</button>
+                    <button class="btn-e" id="opt-e" onclick="handleAnswer()">Option E</button>
+                    <button class="btn-f" id="opt-f" onclick="handleAnswer()">Option F</button>
                 </div>
             </div>
         </div>
@@ -144,23 +213,21 @@
         <div id="result-container" class="hidden">
             <h1>The Results Are In</h1>
             <h2 id="result-percentage">Calculating...</h2>
+            <div id="time-result"></div>
             <p id="result-description">Based on your sophisticated palate.</p>
             <br>
-            <button onclick="location.reload()" style="background-color: #2d3436; width: 100%;">Take Quiz Again</button>
+            <button onclick="location.reload()" style="background-color: #2d3436; width: 100%;">Try For a Faster PB</button>
         </div>
     </div>
 
     <script>
-        // Quiz Data: Total of 120 questions, now with 6 options each (a-f)
+        // --- Quiz Data (Same 120 Questions, 6 Options) ---
         const questions = [
-            // Q1 is the secret trigger
             { text: "Friday Night Dinner:", a: "Pizza", b: "Sushi", c: "Tacos", d: "Curry", e: "Steak", f: "Pasta" },
             { text: "Best Dessert:", a: "Ice Cream", b: "Chocolate Cake", c: "Cheesecake", d: "Tiramisu", e: "Fruit Salad", f: "Doughnuts" },
             { text: "Morning Drink:", a: "Hot Coffee", b: "Iced Latte", c: "Green Tea", d: "Black Tea", e: "Orange Juice", f: "Water" },
             { text: "Comfort Food:", a: "Mac & Cheese", b: "Tacos", c: "Chicken Soup", d: "Fried Rice", e: "Grilled Cheese", f: "Ramen" },
             { text: "Movie Snack:", a: "Popcorn", b: "Candy", c: "Nachos", d: "Pretzels", e: "Chocolate Bar", f: "Grapes" },
-
-            // 115 Added Questions for Length, now with 6 options
             { text: "Fruit Preference:", a: "Apples", b: "Oranges", c: "Bananas", d: "Grapes", e: "Pears", f: "Kiwi" },
             { text: "Spicy or Mild:", a: "Very Spicy", b: "Medium Heat", c: "Slightly Spicy", d: "Totally Mild", e: "Sweet Heat", f: "Just Flavor" },
             { text: "Soup or Salad:", a: "Hearty Soup", b: "Light Salad", c: "Gazpacho", d: "Chowder", e: "Caesar Salad", f: "Side Soup" },
@@ -287,10 +354,72 @@
 
         let currentQuestion = 0;
         
-        // Secret Logic Variables
+        // --- Speedrun and Timer Variables ---
+        let startTime;
+        let timerInterval;
+        let isTimerRunning = false;
+        const PB_KEY = 'quizSpeedrunPB'; // Key for local storage
+
+        // --- Secret Logic Variables ---
         let secretClicks = 0;
         let secretActivated = false;
 
+        // --- Helper Function for Time Formatting ---
+        function formatTime(ms) {
+            if (ms === Infinity) return "No PB Set";
+            if (ms === 0) return "00:00.00";
+            
+            const totalSeconds = ms / 1000;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            const milliseconds = Math.floor((ms % 1000) / 10); // show 2 digits for ms
+            
+            const minStr = String(minutes).padStart(2, '0');
+            const secStr = String(seconds).padStart(2, '0');
+            const msStr = String(milliseconds).padStart(2, '0');
+
+            return `${minStr}:${secStr}.${msStr}`;
+        }
+
+        // --- Local Storage Functions ---
+        function loadPB() {
+            const savedPB = localStorage.getItem(PB_KEY);
+            const pbDisplay = document.getElementById('pb-display');
+            
+            if (savedPB) {
+                const pbTime = parseInt(savedPB);
+                pbDisplay.textContent = `Personal Best: ${formatTime(pbTime)}`;
+                return pbTime;
+            } else {
+                pbDisplay.textContent = "Personal Best: No PB Set";
+                return Infinity;
+            }
+        }
+        let personalBest = loadPB(); // Load PB on script start
+
+        // --- Timer Functions ---
+        function startTimer() {
+            if (isTimerRunning) return;
+            startTime = Date.now();
+            isTimerRunning = true;
+            timerInterval = setInterval(updateTimer, 10); // Update every 10ms for millisecond accuracy
+        }
+
+        function stopTimer() {
+            if (!isTimerRunning) return 0;
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            const elapsedTime = Date.now() - startTime;
+            return elapsedTime;
+        }
+
+        function updateTimer() {
+            if (!isTimerRunning) return;
+            const currentTime = Date.now() - startTime;
+            document.getElementById('timer-display').textContent = formatTime(currentTime);
+        }
+
+        // --- Quiz Logic ---
         function loadQuestion() {
             const q = questions[currentQuestion];
             document.getElementById('question').textContent = q.text;
@@ -307,47 +436,91 @@
         }
 
         function checkSecret() {
-            // Only allow the secret to work on the first question ("Friday Night Dinner:")
-            const currentText = questions[currentQuestion].text;
-            
-            if (currentQuestion === 0 && currentText.includes("Friday Night Dinner")) {
+            // Secret logic on Q1
+            if (currentQuestion === 0 && questions[currentQuestion].text.includes("Friday Night Dinner")) {
                 secretClicks++;
                 
                 if (secretClicks === 3) {
                     secretActivated = true;
-                    // Optional visual cue for activation:
-                    // document.getElementById('question').style.color = 'blue';
                 }
             }
         }
 
-        function nextQuestion() {
+        function handleAnswer() {
+            if (currentQuestion === 0) {
+                // Start timer immediately after answering the FIRST question
+                startTimer();
+            }
+
             currentQuestion++;
             
             if (currentQuestion < questions.length) {
                 loadQuestion();
             } else {
-                showResult();
+                const finalTime = stopTimer();
+                showResult(finalTime);
             }
         }
 
-        // Initialize
-        loadQuestion();
-        
-        function showResult() {
+        // --- Result and PB Logic ---
+        function showResult(finalTime) {
             document.getElementById('quiz-box').classList.add('hidden');
             document.getElementById('result-container').classList.remove('hidden');
 
             const resultHeader = document.getElementById('result-percentage');
-            
-            // Check if the secret was triggered
+            const timeResult = document.getElementById('time-result');
+
+            // Set final quiz result
             if (secretActivated) {
                 resultHeader.textContent = "You are 0% Gay";
             } else {
-                // Default result 
                 resultHeader.textContent = "You are 99.5% Gay";
             }
+            
+            // Display final time
+            timeResult.textContent = `Time: ${formatTime(finalTime)}`;
+
+            // Check and Save Personal Best (PB)
+            if (finalTime < personalBest) {
+                localStorage.setItem(PB_KEY, finalTime);
+                timeResult.innerHTML += '<br><span class="pb-beaten">NEW PERSONAL BEST!</span>';
+                triggerConfetti();
+            } else {
+                timeResult.innerHTML += `<br>PB to Beat: ${formatTime(personalBest)}`;
+            }
         }
+
+        // --- Confetti Effect (Simple Implementation) ---
+        function triggerConfetti() {
+            const container = document.getElementById('confetti-effect');
+            container.classList.remove('hidden');
+            const colors = [
+                'var(--primary)', 
+                'var(--secondary)', 
+                'var(--color-c)', 
+                'var(--color-e)',
+                '#fff' // White confetti
+            ];
+
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.classList.add('confetti');
+                c.style.left = `${Math.random() * 100}%`;
+                c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDelay = `${Math.random() * 0.5}s`;
+                c.style.animationDuration = `${2.5 + Math.random() * 1}s`;
+                container.appendChild(c);
+            }
+
+            // Clean up confetti after animation
+            setTimeout(() => {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Initialize
+        loadQuestion();
     </script>
 
 </body>
