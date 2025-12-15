@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Preference Quiz</title>
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --bg: #f7f9fc;
+            --text: #2d3436;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-box {
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            font-weight: bold;
+            color: white;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-a { background-color: var(--primary); }
+        .btn-b { background-color: var(--secondary); }
+
+        .btn-a:hover, .btn-b:hover {
+            opacity: 0.9;
+        }
+
+        /* Result Styles */
+        .hidden { display: none; }
+        
+        #result-container h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        #result-description {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            color: #636e72;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="quiz-box">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <h1>Food Personality Quiz</h1>
+            <div class="question-box">
+                <p class="question-text" id="question">Loading...</p>
+                <div class="options">
+                    <button class="btn-a" id="opt-a" onclick="nextQuestion()">Option A</button>
+                    <button class="btn-b" id="opt-b" onclick="nextQuestion()">Option B</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <h1>The Results Are In</h1>
+            <h2 id="result-percentage">Calculating...</h2>
+            <p id="result-description">Based on your sophisticated palate.</p>
+            <br>
+            <button onclick="location.reload()" style="background-color: #2d3436; width: 100%;">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const questions = [
+            { text: "Friday Night Dinner:", a: "Pizza", b: "Sushi" },
+            { text: "Best Dessert:", a: "Ice Cream", b: "Chocolate Cake" },
+            { text: "Morning Drink:", a: "Hot Coffee", b: "Iced Latte" },
+            { text: "Comfort Food:", a: "Mac & Cheese", b: "Tacos" },
+            { text: "Movie Snack:", a: "Popcorn", b: "Candy" }
+        ];
+
+        let currentQuestion = 0;
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question').textContent = q.text;
+            document.getElementById('opt-a').textContent = q.a;
+            document.getElementById('opt-b').textContent = q.b;
+            
+            // Update progress bar
+            const progressPct = (currentQuestion / questions.length) * 100;
+            document.getElementById('progress').style.width = progressPct + "%";
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            // Hide quiz, show result
+            document.getElementById('quiz-box').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+
+            // Set the specific result requested
+            document.getElementById('result-percentage').textContent = "You are 98% Gay";
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+
+</body>
+</html>
