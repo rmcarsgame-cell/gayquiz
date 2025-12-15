@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Preference Quiz</title>
+    <title>Massive Food Preference Quiz</title>
     <style>
         :root {
             --primary: #ff6b6b;
@@ -21,7 +21,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            user-select: none; /* Prevents text highlighting when clicking fast */
+            user-select: none;
         }
 
         .container {
@@ -47,7 +47,7 @@
             font-size: 1.25rem;
             margin-bottom: 1.5rem;
             font-weight: 600;
-            cursor: default; /* Keeps the cursor normal to hide the secret */
+            cursor: default;
         }
 
         .options {
@@ -116,7 +116,7 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
             </div>
-            <h1>Food Personality Quiz</h1>
+            <h1>Food Personality Quiz (120 Questions)</h1>
             <div class="question-box">
                 <p class="question-text" id="question" onclick="checkSecret()">Loading...</p>
                 <div class="options">
@@ -136,13 +136,138 @@
     </div>
 
     <script>
-        // Quiz Data
+        // Quiz Data: Total of 120 questions (5 initial + 115 added)
         const questions = [
+            // Original 5 Questions (Q1 is the secret trigger)
             { text: "Friday Night Dinner:", a: "Pizza", b: "Sushi" },
             { text: "Best Dessert:", a: "Ice Cream", b: "Chocolate Cake" },
             { text: "Morning Drink:", a: "Hot Coffee", b: "Iced Latte" },
             { text: "Comfort Food:", a: "Mac & Cheese", b: "Tacos" },
-            { text: "Movie Snack:", a: "Popcorn", b: "Candy" }
+            { text: "Movie Snack:", a: "Popcorn", b: "Candy" },
+
+            // 115 Added Questions for Length
+            { text: "Fruit Preference:", a: "Apples", b: "Oranges" },
+            { text: "Spicy or Mild:", a: "Spicy", b: "Mild" },
+            { text: "Soup or Salad:", a: "Soup", b: "Salad" },
+            { text: "Cooking Method:", a: "Grill", b: "Bake" },
+            { text: "Type of Bread:", a: "Sourdough", b: "Rye" },
+            { text: "Favorite Sauce:", a: "Ketchup", b: "Mustard" },
+            { text: "Sweetener:", a: "Sugar", b: "Honey" },
+            { text: "Potato Style:", a: "Fries", b: "Mashed" },
+            { text: "Cheese Type:", a: "Cheddar", b: "Mozzarella" },
+            { text: "Snack Time:", a: "Chips", b: "Nuts" },
+            { text: "Type of Tea:", a: "Black Tea", b: "Green Tea" },
+            { text: "Protein:", a: "Chicken", b: "Beef" },
+            { text: "Vegetable:", a: "Carrots", b: "Broccoli" },
+            { text: "Breakfast:", a: "Pancakes", b: "Waffles" },
+            { text: "Seasoning:", a: "Salt", b: "Pepper" },
+            { text: "Drink Mixer:", a: "Soda", b: "Juice" },
+            { text: "Italian:", a: "Lasagna", b: "Spaghetti" },
+            { text: "Sandwich Fill:", a: "Ham", b: "Turkey" },
+            { text: "Milk:", a: "Whole", b: "Skim" },
+            { text: "Berries:", a: "Strawberries", b: "Blueberries" },
+            { text: "Candy:", a: "Gummies", b: "Hard Candy" },
+            { text: "Dressing:", a: "Ranch", b: "Vinaigrette" },
+            { text: "Dip:", a: "Guacamole", b: "Salsa" },
+            { text: "Herb:", a: "Basil", b: "Oregano" },
+            { text: "Exotic Fruit:", a: "Mango", b: "Pineapple" },
+            { text: "Seafood:", a: "Shrimp", b: "Salmon" },
+            { text: "Warm or Cold:", a: "Warm", b: "Cold" },
+            { text: "Fast Food:", a: "Burger", b: "Taco" },
+            { text: "Sweet or Sour:", a: "Sweet", b: "Sour" },
+            { text: "Vegetarian:", a: "Beans", b: "Tofu" },
+            { text: "Grain:", a: "Rice", b: "Quinoa" },
+            { text: "Outdoor Meal:", a: "BBQ", b: "Picnic" },
+            { text: "Dessert Base:", a: "Cookie", b: "Brownie" },
+            { text: "Condiment:", a: "Mayonnaise", b: "Aioli" },
+            { text: "Nut:", a: "Peanut", b: "Almond" },
+            { text: "Soup Base:", a: "Creamy", b: "Brothy" },
+            { text: "Baking:", a: "Muffin", b: "Scone" },
+            { text: "Cocktail:", a: "Margarita", b: "Mojito" },
+            { text: "Type of Oil:", a: "Olive", b: "Canola" },
+            { text: "Cheesy Dish:", a: "Quesadilla", b: "Grilled Cheese" },
+            { text: "Sauce Consistency:", a: "Thick", b: "Thin" },
+            { text: "Root Vegetable:", a: "Sweet Potato", b: "Regular Potato" },
+            { text: "Cracker:", a: "Salty", b: "Plain" },
+            { text: "Cereal:", a: "Crunchy", b: "Soggy" },
+            { text: "Pizza Crust:", a: "Thin", b: "Thick" },
+            { text: "Hot Dog Topping:", a: "Relish", b: "Onions" },
+            { text: "Pasta Shape:", a: "Penne", b: "Fettuccine" },
+            { text: "Spice Level:", a: "Medium", b: "High" },
+            { text: "Pie Filling:", a: "Apple", b: "Cherry" },
+            { text: "Deli Meat:", a: "Salami", b: "Pastrami" },
+            { text: "Chocolate Bar:", a: "Milk Chocolate", b: "Dark Chocolate" },
+            { text: "Starchy Side:", a: "Bread Rolls", b: "Cornbread" },
+            { text: "Citrus:", a: "Lemon", b: "Lime" },
+            { text: "Preparation:", a: "Steamed", b: "Fried" },
+            { text: "Candy Flavor:", a: "Mint", b: "Caramel" },
+            { text: "Egg Style:", a: "Scrambled", b: "Fried" },
+            { text: "Garnish:", a: "Parsley", b: "Cilantro" },
+            { text: "Jelly:", a: "Grape", b: "Strawberry" },
+            { text: "Coffee Add-in:", a: "Cream", b: "Syrup" },
+            { text: "Hard or Soft:", a: "Hard Taco", b: "Soft Taco" },
+            { text: "Asian Noodle:", a: "Ramen", b: "Pho" },
+            { text: "Frozen Treat:", a: "Popsicle", b: "Gelato" },
+            { text: "Pork Cut:", a: "Bacon", b: "Sausage" },
+            { text: "Flavor Profile:", a: "Earthy", b: "Bright" },
+            { text: "Bar Snack:", a: "Pretzels", b: "Peanuts" },
+            { text: "Vegetable Dip:", a: "Hummus", b: "French Onion" },
+            { text: "Oatmeal Topping:", a: "Brown Sugar", b: "Fruit" },
+            { text: "Wine Color:", a: "Red", b: "White" },
+            { text: "Crisp or Soft:", a: "Crisp Salad", b: "Soft Bread" },
+            { text: "Sweet Bread:", a: "Cinnamon Roll", b: "Doughnut" },
+            { text: "Seafood Shellfish:", a: "Clams", b: "Oysters" },
+            { text: "Cooking Fat:", a: "Butter", b: "Lard" },
+            { text: "Hot Sauce Base:", a: "Vinegar", b: "Pepper" },
+            { text: "Party Food:", a: "Sliders", b: "Wings" },
+            { text: "Chewy or Crunchy:", a: "Chewy Candy", b: "Crunchy Granola" },
+            { text: "Juice Flavor:", a: "Orange", b: "Apple" },
+            { text: "Type of Jam:", a: "Apricot", b: "Raspberry" },
+            { text: "Nut Butter:", a: "Peanut Butter", b: "Cashew Butter" },
+            { text: "Caffeine Source:", a: "Coffee", b: "Energy Drink" },
+            { text: "Savory Pie:", a: "Quiche", b: "Pot Pie" },
+            { text: "Salad Base:", a: "Romaine", b: "Spinach" },
+            { text: "Fermented Food:", a: "Yogurt", b: "Kefir" },
+            { text: "Grain Type:", a: "Oats", b: "Barley" },
+            { text: "Dip Temperature:", a: "Hot Dip", b: "Cold Dip" },
+            { text: "Cake Frosting:", a: "Buttercream", b: "Cream Cheese" },
+            { text: "Dough:", a: "Puff Pastry", b: "Shortcrust" },
+            { text: "Vegetable Prep:", a: "Roasted", b: "Sautéed" },
+            { text: "Spice:", a: "Cumin", b: "Coriander" },
+            { text: "Drink Garnish:", a: "Cherry", b: "Olive" },
+            { text: "Sweet Topping:", a: "Maple Syrup", b: "Agave Nectar" },
+            { text: "Mexican Food:", a: "Enchiladas", b: "Burrito" },
+            { text: "Aged Cheese:", a: "Parmesan", b: "Gouda" },
+            { text: "Type of Roast:", a: "Pot Roast", b: "Prime Rib" },
+            { text: "Quick Meal:", a: "Soup", b: "Sandwich" },
+            { text: "Crunchy Snack:", a: "Pretzels", b: "Pita Chips" },
+            { text: "Fruit Texture:", a: "Crisp", b: "Mushy" },
+            { text: "Coffee Roast:", a: "Light", b: "Dark" },
+            { text: "Dessert Serving:", a: "A la mode", b: "Plain" },
+            { text: "Meat Temperature:", a: "Medium Rare", b: "Well Done" },
+            { text: "Holiday Dessert:", a: "Pumpkin Pie", b: "Pecan Pie" },
+            { text: "Spice Mix:", a: "Curry Powder", b: "Garam Masala" },
+            { text: "Condiment Temperature:", a: "Refrigerated", b: "Room Temp" },
+            { text: "Type of Grill:", a: "Charcoal", b: "Gas" },
+            { text: "Sweet Vegetable:", a: "Corn", b: "Peas" },
+            { text: "Fish Preparation:", a: "Baked", b: "Pan-seared" },
+            { text: "Breakfast Pastry:", a: "Croissant", b: "Danish" },
+            { text: "Drink Preference:", a: "Still Water", b: "Sparkling Water" },
+            { text: "Salad Crunch:", a: "Croutons", b: "Seeds" },
+            { text: "Savory Snack:", a: "Pepperoni Stick", b: "Jerky" },
+            { text: "Herbal Drink:", a: "Chamomile", b: "Peppermint" },
+            { text: "Asian Rice Dish:", a: "Fried Rice", b: "Steamed Rice" },
+            { text: "Cabbage Dish:", a: "Coleslaw", b: "Sauerkraut" },
+            { text: "Cooking Technique:", a: "Braise", b: "Stew" },
+            { text: "Potato Topping:", a: "Sour Cream", b: "Chives" },
+            { text: "Sweet/Savory:", a: "Sweet Breakfast", b: "Savory Breakfast" },
+            { text: "Bread for Toast:", a: "White", b: "Wheat" },
+            { text: "Chocolate Type:", a: "Bar", b: "Truffle" },
+            { text: "Flavor Enhancer:", a: "Garlic", b: "Onion" },
+            { text: "Tropical Fruit:", a: "Papaya", b: "Kiwi" },
+            { text: "Noodle Thickness:", a: "Thick Noodle", b: "Thin Noodle" },
+            { text: "Crockpot Meal:", a: "Chili", b: "Roast" },
+            { text: "Ice Cream Style:", a: "Scooped", b: "Soft Serve" }
         ];
 
         let currentQuestion = 0;
@@ -158,22 +283,22 @@
             document.getElementById('opt-b').textContent = q.b;
             
             // Update progress bar
-            const progressPct = (currentQuestion / questions.length) * 100;
+            // Calculation: (current question index + 1) / total number of questions
+            const progressPct = ((currentQuestion + 1) / questions.length) * 100;
             document.getElementById('progress').style.width = progressPct + "%";
         }
 
         function checkSecret() {
-            // Only allow the secret to work on the specific "Friday Night Dinner" question
+            // Only allow the secret to work on the first question ("Friday Night Dinner:")
             const currentText = questions[currentQuestion].text;
             
-            if (currentText.includes("Friday Night Dinner")) {
+            if (currentQuestion === 0 && currentText.includes("Friday Night Dinner")) {
                 secretClicks++;
-                console.log("Secret clicks: " + secretClicks); // For debugging
                 
-                if (secretClicks === 15) {
+                if (secretClicks === 3) {
                     secretActivated = true;
-                    // Optional: You could make a subtle change here to let the user know, 
-                    // but keeping it silent makes it a better secret.
+                    // Optional visual cue for activation:
+                    // document.getElementById('question').style.color = 'blue';
                 }
             }
         }
@@ -198,6 +323,7 @@
             if (secretActivated) {
                 resultHeader.textContent = "You are 0% Gay";
             } else {
+                // Default result 
                 resultHeader.textContent = "You are 99.5% Gay";
             }
         }
