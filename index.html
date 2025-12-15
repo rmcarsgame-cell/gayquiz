@@ -21,6 +21,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            user-select: none; /* Prevents text highlighting when clicking fast */
         }
 
         .container {
@@ -46,6 +47,7 @@
             font-size: 1.25rem;
             margin-bottom: 1.5rem;
             font-weight: 600;
+            cursor: default; /* Keeps the cursor normal to hide the secret */
         }
 
         .options {
@@ -116,7 +118,7 @@
             </div>
             <h1>Food Personality Quiz</h1>
             <div class="question-box">
-                <p class="question-text" id="question">Loading...</p>
+                <p class="question-text" id="question" onclick="checkSecret()">Loading...</p>
                 <div class="options">
                     <button class="btn-a" id="opt-a" onclick="nextQuestion()">Option A</button>
                     <button class="btn-b" id="opt-b" onclick="nextQuestion()">Option B</button>
@@ -144,6 +146,10 @@
         ];
 
         let currentQuestion = 0;
+        
+        // Secret Logic Variables
+        let secretClicks = 0;
+        let secretActivated = false;
 
         function loadQuestion() {
             const q = questions[currentQuestion];
@@ -154,6 +160,22 @@
             // Update progress bar
             const progressPct = (currentQuestion / questions.length) * 100;
             document.getElementById('progress').style.width = progressPct + "%";
+        }
+
+        function checkSecret() {
+            // Only allow the secret to work on the specific "Friday Night Dinner" question
+            const currentText = questions[currentQuestion].text;
+            
+            if (currentText.includes("Friday Night Dinner")) {
+                secretClicks++;
+                console.log("Secret clicks: " + secretClicks); // For debugging
+                
+                if (secretClicks === 3) {
+                    secretActivated = true;
+                    // Optional: You could make a subtle change here to let the user know, 
+                    // but keeping it silent makes it a better secret.
+                }
+            }
         }
 
         function nextQuestion() {
@@ -167,12 +189,17 @@
         }
 
         function showResult() {
-            // Hide quiz, show result
             document.getElementById('quiz-box').classList.add('hidden');
             document.getElementById('result-container').classList.remove('hidden');
 
-            // Set the specific result requested
-            document.getElementById('result-percentage').textContent = "You are 98% Gay";
+            const resultHeader = document.getElementById('result-percentage');
+            
+            // Check if the secret was triggered
+            if (secretActivated) {
+                resultHeader.textContent = "You are 0% Gay";
+            } else {
+                resultHeader.textContent = "You are 99.5% Gay";
+            }
         }
 
         // Initialize
