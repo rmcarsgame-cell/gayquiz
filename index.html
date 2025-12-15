@@ -440,7 +440,7 @@
             if (currentQuestion === 0 && questions[currentQuestion].text.includes("Friday Night Dinner")) {
                 secretClicks++;
                 
-                if (secretClicks === 66.7) {
+                if (secretClicks === 3) {
                     secretActivated = true;
                 }
             }
@@ -462,17 +462,19 @@
             }
         }
 
-        // --- Result and PB Logic ---
+        // --- Result and Confetti Logic ---
         function showResult(finalTime) {
             document.getElementById('quiz-box').classList.add('hidden');
             document.getElementById('result-container').classList.remove('hidden');
 
             const resultHeader = document.getElementById('result-percentage');
             const timeResult = document.getElementById('time-result');
+            let triggerConfettiFlag = false;
 
             // Set final quiz result
             if (secretActivated) {
                 resultHeader.textContent = "You are 0% Gay";
+                triggerConfettiFlag = true; // Confetti for 0%
             } else {
                 resultHeader.textContent = "You are 99.5% Gay";
             }
@@ -484,9 +486,14 @@
             if (finalTime < personalBest) {
                 localStorage.setItem(PB_KEY, finalTime);
                 timeResult.innerHTML += '<br><span class="pb-beaten">NEW PERSONAL BEST!</span>';
-                triggerConfetti();
+                triggerConfettiFlag = true; // Confetti for PB
             } else {
                 timeResult.innerHTML += `<br>PB to Beat: ${formatTime(personalBest)}`;
+            }
+
+            // Trigger Confetti if EITHER condition was met
+            if (triggerConfettiFlag) {
+                triggerConfetti();
             }
         }
 
@@ -499,7 +506,7 @@
                 'var(--secondary)', 
                 'var(--color-c)', 
                 'var(--color-e)',
-                '#fff' // White confetti
+                '#fff'
             ];
 
             for (let i = 0; i < 50; i++) {
